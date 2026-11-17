@@ -1,0 +1,19 @@
+name: Desktop widget basic checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  syntax:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check main-electron.js
+      - run: node --check main.js
+      - run: node -e "const fs=require('node:fs'); if(!fs.existsSync('index.html')) process.exit(1)"
